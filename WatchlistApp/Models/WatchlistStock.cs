@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace WatchlistApp.Models
 {
-    public class Stock
+    public class WatchlistStock
     {
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public int StockId { get; set; }
+        public Stock Stock { get; set; }
         [Required]
-        public string Ticker { get; set; }
+        public int WatchlistId { get; set; }
+        public Watchlist Watchlist { get; set; }
     }
 }

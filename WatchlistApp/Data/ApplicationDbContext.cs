@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WatchlistApp.Models;
@@ -14,12 +15,14 @@ namespace WatchlistApp.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Watchlist> Watchlists { get; set; }
+        public DbSet<WatchlistStock> WatchlistStock { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApplicationUser>().ToTable("ApplicationUser");
             modelBuilder.Entity<Stock>().ToTable("Stock");
             modelBuilder.Entity<Watchlist>().ToTable("Watchlist");
+            modelBuilder.Entity<WatchlistStock>().ToTable("WatchlistStock");
 
             base.OnModelCreating(modelBuilder);
 
