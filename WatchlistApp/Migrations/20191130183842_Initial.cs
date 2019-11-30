@@ -30,7 +30,7 @@ namespace WatchlistApp.Migrations
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
@@ -158,7 +158,8 @@ namespace WatchlistApp.Migrations
                 name: "Watchlist",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: true)
                 },
@@ -181,7 +182,7 @@ namespace WatchlistApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false),
                     Ticker = table.Column<string>(nullable: false),
-                    WatchlistId = table.Column<string>(nullable: true)
+                    WatchlistId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,8 +202,7 @@ namespace WatchlistApp.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StockId = table.Column<int>(nullable: false),
-                    WatchlistId = table.Column<int>(nullable: false),
-                    WatchlistId1 = table.Column<string>(nullable: true)
+                    WatchlistId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -214,17 +214,17 @@ namespace WatchlistApp.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WatchlistStock_Watchlist_WatchlistId1",
-                        column: x => x.WatchlistId1,
+                        name: "FK_WatchlistStock_Watchlist_WatchlistId",
+                        column: x => x.WatchlistId,
                         principalTable: "Watchlist",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "92bf34e7-c209-42da-a802-be9f1bcdab5f", "admin@admin.com", true, "admin", "admin", false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAEAACcQAAAAEMjTieiCQZJIDtrrfVT4lliZVuIPrUZrxTCtCv1SOGm6Rc6LolGqm9ergvm69uimwQ==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", false, "admin@admin.com" });
+                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "7095e06b-89ff-49c5-b5e7-578254cce31f", "admin@admin.com", true, "admin", "admin", false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAEAACcQAAAAEP9VkX7QNYr0l7YnUZEiIfcVlnP1iW+zezeY1r9xdNVJbNBNoGNF2nVvSJ3dt4IRfA==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", false, "admin@admin.com" });
 
             migrationBuilder.InsertData(
                 table: "Stock",
@@ -293,9 +293,9 @@ namespace WatchlistApp.Migrations
                 column: "StockId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WatchlistStock_WatchlistId1",
+                name: "IX_WatchlistStock_WatchlistId",
                 table: "WatchlistStock",
-                column: "WatchlistId1");
+                column: "WatchlistId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

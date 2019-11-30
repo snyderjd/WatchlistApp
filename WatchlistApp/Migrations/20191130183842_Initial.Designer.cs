@@ -10,7 +10,7 @@ using WatchlistApp.Data;
 namespace WatchlistApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191129220426_Initial")]
+    [Migration("20191130183842_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,7 +233,7 @@ namespace WatchlistApp.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "92bf34e7-c209-42da-a802-be9f1bcdab5f",
+                            ConcurrencyStamp = "7095e06b-89ff-49c5-b5e7-578254cce31f",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "admin",
@@ -241,7 +241,7 @@ namespace WatchlistApp.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMjTieiCQZJIDtrrfVT4lliZVuIPrUZrxTCtCv1SOGm6Rc6LolGqm9ergvm69uimwQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP9VkX7QNYr0l7YnUZEiIfcVlnP1iW+zezeY1r9xdNVJbNBNoGNF2nVvSJ3dt4IRfA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TwoFactorEnabled = false,
@@ -264,8 +264,8 @@ namespace WatchlistApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WatchlistId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("WatchlistId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -308,8 +308,10 @@ namespace WatchlistApp.Migrations
 
             modelBuilder.Entity("WatchlistApp.Models.Watchlist", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -338,14 +340,11 @@ namespace WatchlistApp.Migrations
                     b.Property<int>("WatchlistId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WatchlistId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StockId");
 
-                    b.HasIndex("WatchlistId1");
+                    b.HasIndex("WatchlistId");
 
                     b.ToTable("WatchlistStock");
                 });
@@ -425,7 +424,9 @@ namespace WatchlistApp.Migrations
 
                     b.HasOne("WatchlistApp.Models.Watchlist", "Watchlist")
                         .WithMany()
-                        .HasForeignKey("WatchlistId1");
+                        .HasForeignKey("WatchlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

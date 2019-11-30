@@ -35,7 +35,7 @@ namespace WatchlistApp.Controllers
         }
 
         // GET: Watchlists/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -56,7 +56,6 @@ namespace WatchlistApp.Controllers
         // GET: Watchlists/Create
         public IActionResult Create()
         {
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -67,18 +66,20 @@ namespace WatchlistApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ApplicationUserId")] Watchlist watchlist)
         {
+            var user = await GetCurrentUserAsync();
+
             if (ModelState.IsValid)
             {
+                watchlist.ApplicationUserId = user.Id;
                 _context.Add(watchlist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", watchlist.ApplicationUserId);
             return View(watchlist);
         }
 
         // GET: Watchlists/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -99,7 +100,7 @@ namespace WatchlistApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,ApplicationUserId")] Watchlist watchlist)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ApplicationUserId")] Watchlist watchlist)
         {
             if (id != watchlist.Id)
             {
@@ -131,7 +132,7 @@ namespace WatchlistApp.Controllers
         }
 
         // GET: Watchlists/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -152,7 +153,7 @@ namespace WatchlistApp.Controllers
         // POST: Watchlists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var watchlist = await _context.Watchlists.FindAsync(id);
             _context.Watchlists.Remove(watchlist);
@@ -160,7 +161,7 @@ namespace WatchlistApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WatchlistExists(string id)
+        private bool WatchlistExists(int id)
         {
             return _context.Watchlists.Any(e => e.Id == id);
         }
